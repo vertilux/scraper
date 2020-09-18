@@ -1,12 +1,12 @@
 # Vertilux's LME/SME Web scraper
-
+```
  __      __       _   _ _
  \ \    / /      | | (_) |
   \ \  / /__ _ __| |_ _| |_   ___  __
    \ \/ / _ \ '__| __| | | | | \ \/ /
     \  /  __/ |  | |_| | | |_| |>  <
      \/ \___|_|   \__|_|_|\__,_/_/\_\
-
+```
 Simple web scraper to calculate the LME and SME rates.
 
 ## Vertilux
