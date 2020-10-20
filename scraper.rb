@@ -22,6 +22,8 @@ lme_table.each do |list|
   @lme << l
 end
 
+@data_valid = lme_parsed.css('.delayed-date').text
+
 # Scrapping Shanghai Metals Market Website
 smm_url = "https://www.metal.com/"
 smm_unparsed = HTTParty.get(smm_url)
@@ -74,4 +76,5 @@ table = table.render width: 60, resize: true, alignments: [:right, :right, :righ
 # Output
 welcome = Artii::Base.new
 puts Rainbow(welcome.asciify("Vertilux's LME Scraper")).red
+puts @data_valid
 puts table
