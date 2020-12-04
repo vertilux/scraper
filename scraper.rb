@@ -1,6 +1,6 @@
 require 'nokogiri'
 require 'httparty'
-
+require 'mechanize'
 require "uri"
 require "net/http"
 require 'json'
@@ -11,18 +11,12 @@ require 'rainbow'
 require 'friendly_numbers'
 
 # Scrapping LME Website
-lme_url = "https://www.lme.com/en-GB/Metals/Non-ferrous/Aluminium#tabIndex=0"
-lme_unparsed = HTTParty.get(lme_url)
-lme_parsed = Nokogiri::HTML(lme_unparsed)
-@lme = Array.new
-lme_table = lme_parsed.css('.tabContent').css('.table-wrapper')
-lme_table = lme_table.css('tbody tr')
-lme_table.each do |list|
-  l = list.css('td').map(&:content)[1]
-  @lme << l
-end
-
-@data_valid = lme_parsed.css('.delayed-date').text
+lme_agent = Mechanize.new
+lme_page = lme_agent.get('https://www.lme.com/Metals/Non-ferrous/Aluminium')
+lme_page.links
+aluminum = lme_page.link_with(text: 'Trading <br>summary')
+lme = lme_page.xpath('/html/body/div/div[2]/div[2]/div[2]/div[1]/div[2]/section[1]/div/div[2]/div/div[2]/table/tbody/tr[2]/td[2]')
+@lme = lme.to_s.gsub(/<\/?[^>]*>/, "")
 
 # Scrapping Shanghai Metals Market Website
 smm_url = "https://www.metal.com/"
@@ -59,13 +53,13 @@ def oanda_average_rate
 end
 
 def lme_sme_ave
-  (@lme[1].to_f + (@smm[1].split("-").first.gsub(",", "").to_f / exchange_rates_api))/2
+  (@lme.to_f + (@smm[1].split("-").first.gsub(",", "").to_f / exchange_rates_api))/2
 end
 
 table = TTY::Table.new do |t|
   t << ['LME', 'SME', 'Rate', 'Ave LME/SME']
   t << [
-    "#{FriendlyNumbers.number_to_currency @lme[1].to_f}",
+    "#{FriendlyNumbers.number_to_currency @lme.to_f}",
     "#{@smm[1].split("-").first.gsub(",", "").to_f}",
     "#{FriendlyNumbers.number_to_currency exchange_rates_api.to_f, precision: 4}",
     "#{FriendlyNumbers.number_to_currency lme_sme_ave.to_f}"
@@ -76,5 +70,4 @@ table = table.render width: 60, resize: true, alignments: [:right, :right, :righ
 # Output
 welcome = Artii::Base.new
 puts Rainbow(welcome.asciify("Vertilux's LME Scraper")).red
-puts @data_valid
 puts table
