@@ -19,12 +19,17 @@ With more than 35 years of experience, Vertilux offers its clients the best fabr
 Clone the script: `git clone https://github.com/vertilux/scraper.git` the `cd scraper`.   
 
 ### Set env variables
-Set environment variables, and make sure to change: IP_ADDRESS, DB_NAME, SAGE_USER and SAGE_PASSWD:   
+Set environment variables, and make sure to change: IP_ADDRESS, DB_NAME, DB_PORT, SAGE_USER and SAGE_PASSWD:   
 
 `echo 'export ACCLTD_HOST="IP_ADDRESS"' >> ~/.bashrc`   
 `echo 'export ACCLTD_DB="DB_NAME"' >> ~/.bashrc`   
+`echo 'export ACCLTD_DB="DB_PORT"' >> ~/.bashrc`   
 `echo 'export SAGE_USER="USER"' >> ~/.bashrc`   
 `echo 'export SAGE_PASSWD="PASSWORD"' >> ~/.bashrc`   
 
 ### Execute
 Run it by simple execute ruby script: `bundle exec ruby scrapper`.
+
+### TODO
+
+* If record saved send email or slack message

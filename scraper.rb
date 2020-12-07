@@ -7,7 +7,6 @@ require 'json'
 
 require 'tty-table'
 require 'artii'
-require 'rainbow'
 require 'friendly_numbers'
 require 'require_all'
 
@@ -74,7 +73,7 @@ table = table.render width: 60, resize: true, alignments: [:right, :right, :righ
 
 # Output
 welcome = Artii::Base.new
-puts Rainbow(welcome.asciify("Vertilux's LME Scraper")).red
+puts welcome.asciify("Vertilux's LME Scraper")
 puts table
 
 DailyLme.new do |r|
