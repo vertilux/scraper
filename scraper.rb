@@ -9,13 +9,18 @@ require 'tty-table'
 require 'artii'
 require 'rainbow'
 require 'friendly_numbers'
+require 'require_all'
+
+require 'active_record'
+require 'activerecord-sqlserver-adapter'
+require_all 'config'
+require_all 'app/models'
 
 # Scrapping LME Website
 lme_agent = Mechanize.new
-lme_page = lme_agent.get('https://www.lme.com/Metals/Non-ferrous/Aluminium')
-lme_page.links
-aluminum = lme_page.link_with(text: 'Trading <br>summary')
-lme = lme_page.xpath('/html/body/div/div[2]/div[2]/div[2]/div[1]/div[2]/section[1]/div/div[2]/div/div[2]/table/tbody/tr[2]/td[2]')
+lme_page = lme_agent.get('https://www.lme.com')
+aluminum = lme_agent.page.links_with(:text => 'LME Aluminium')[1].click
+lme = aluminum.xpath('/html/body/div/div[2]/div[2]/div[2]/div[1]/div[2]/section[1]/div/div[2]/div/div[2]/table/tbody/tr[2]/td[2]')
 @lme = lme.to_s.gsub(/<\/?[^>]*>/, "")
 
 # Scrapping Shanghai Metals Market Website
@@ -71,3 +76,11 @@ table = table.render width: 60, resize: true, alignments: [:right, :right, :righ
 welcome = Artii::Base.new
 puts Rainbow(welcome.asciify("Vertilux's LME Scraper")).red
 puts table
+
+DailyLme.new do |r|
+  r.lme = @lme.to_f
+  r.smm = @smm[1].split("-").first.gsub(",", "").to_f
+  r.rate = exchange_rates_api
+  r.oanda = oanda_average_rate
+  r.save
+end

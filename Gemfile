@@ -7,3 +7,8 @@ gem 'tty-table', '~> 0.11.0'
 gem 'friendly_numbers', '~> 0.6.0'
 gem 'artii', '~> 2.1', '>= 2.1.2'
 gem 'mechanize', '~> 2.7', '>= 2.7.5'
+gem 'require_all'
+
+gem 'activerecord', '~> 5.1.6'
+gem 'activerecord-sqlserver-adapter', '~> 5.1.6'
+gem 'tiny_tds', '~> 0.7.0'
